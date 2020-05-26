@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Country;
 use app\models\EntryForm;
+use app\models\RegisterForm;
 use app\models\UploadForm;
 use Yii;
 use yii\base\Model;
@@ -185,6 +186,26 @@ class SiteController extends Controller
         return $this->render('/country/index', [
             'countries' => $countries,
             'pagination' => $pagination,
+        ]);
+    }
+    public function actionRegister(){
+        $model = new RegisterForm();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+//            $request = Yii::$app->request->post();
+//            print_r($request['name']);
+//            die();
+//            $model->save();
+//            Yii::$app->session->setFlash('registerFormSubmitted');
+//            return $this->refresh();
+//            return $this->goBack('/product/index');
+
+            $auth = \Yii::$app->authManager;
+            $authorRole = $auth->getRole('author');
+            $auth->assign($authorRole, $model->id);
+            return $this->redirect('login');
+        }
+        return $this->render('register', [
+            'model' => $model,
         ]);
     }
 

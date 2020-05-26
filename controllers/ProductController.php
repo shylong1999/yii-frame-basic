@@ -22,7 +22,7 @@ class ProductController extends Controller
 //                'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['index','create'],
+                        'actions' => ['index','create','update','view'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -58,7 +58,8 @@ class ProductController extends Controller
         if ($product->load(\Yii::$app->request->post()) && $product->validate()) {
 
             $product->save();
-            return $this->redirect('index');
+//            return $this->redirect('index');
+            return $this->redirect(['/product/view', 'id' => $product->id]);
         }
 
         return $this->render('/products/create', [
@@ -83,17 +84,10 @@ class ProductController extends Controller
 
     public function actionView($id)
     {
-//        print_r($id);
-//        die();
         $product = Product::findOne($id);
-//        $products = Product::find()->asArray()->where('c_id=:id', [':id' => $id]);
-//        $dataProvider = new ActiveDataProvider([
-//            'query' => $products,
-//        ]);
+
         return $this->render('/products/view', [
             'product' => $product,
-//            'products' => $products,
-//            'dataProvider' => $dataProvider,
         ]);
     }
 }

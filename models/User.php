@@ -9,8 +9,11 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public $id;
     public $username;
     public $password;
+    public $name;
+    public $email;
     public $authKey;
     public $accessToken;
+
     public static function tableName()
     {
         return 'users';
@@ -87,6 +90,14 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

@@ -8,7 +8,7 @@ use yii\db\ActiveRecord;
 
 class Product extends ActiveRecord
 {
-    public $primaryKey = 'id';
+//    public $primaryKey = 'id';
     public static function tableName()
     {
         return 'products';
