@@ -10,6 +10,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
+use yii\web\UploadedFile;
 
 class ProductController extends Controller
 {
@@ -71,11 +72,13 @@ class ProductController extends Controller
     {
         $categories = Category::find()->asArray()->all();
         $product = new Product();
-        if ($product->load(\Yii::$app->request->post()) && $product->validate()) {
-
+        if ($product->load(\Yii::$app->request->post())) {
+            $product->images = UploadedFile::getInstance($product, 'images');
             $product->save();
-//            return $this->redirect('index');
-            return $this->redirect(['/product/view', 'id' => $product->id]);
+            if ($product->upload()) {
+                return $this->redirect(['/product/view', 'id' => $product->id]);
+            }
+
         }
 
         return $this->render('/products/create', [
@@ -87,9 +90,13 @@ class ProductController extends Controller
     public function actionUpdate($id)
     {
         $product = Product::findOne($id);
-        if ($product->load(Yii::$app->request->post()) && $product->save()) {
+        if ($product->load(Yii::$app->request->post())) {
+            $product->images = UploadedFile::getInstance($product, 'images');
+            $product->save();
+            if ($product->upload()) {
+                return $this->redirect('index');
+            }
 
-            return $this->redirect('index');
         }
         $categories = Category::find()->asArray()->all();
         return $this->render('/products/update', [

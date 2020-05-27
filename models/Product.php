@@ -22,6 +22,7 @@ class Product extends ActiveRecord
             [['p_amount'], 'integer', 'max' => 255],
             [['discount'], 'integer', 'max' => 255],
             [['c_id'], 'integer', 'max' => 255],
+            [['images'],'file','skipOnEmpty' => false, 'extensions' => 'png,jpg']
         ];
     }
     public function attributeLabels()
@@ -32,8 +33,20 @@ class Product extends ActiveRecord
             'p_amount' => 'Amount',
             'discount' => 'Discount(%)',
             'c_id' => 'Category Name',
+            'images' => 'Images',
 //            'population' => 'Population',
         ];
+    }
+    public function upload(){
+        if ($this->validate()){
+
+            $this->images->saveAs('uploads/'.$this->images->baseName . '.'.$this->images->extension);
+//            $path = $this->images->saveAs('uploads/'.$this->images->baseName . '.'.$this->images->extension);
+//            $model = new Product();
+//            $model->images = $path;
+//            $model->save();
+            return true;
+        }else return false;
     }
 
     public function getCategories(){

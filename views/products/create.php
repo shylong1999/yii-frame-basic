@@ -22,7 +22,7 @@ $listData=ArrayHelper::map($categories,'id','title');
 
 <div>
     <h1> <?= Html::encode($this->title) ?></h1>
-    <?php $form = ActiveForm::begin();?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]);?>
     <?= $form->field($product, 'p_name')->textInput(['maxlength' => true]) ?>
     <?= $form->field($product, 'p_price')->textInput(['maxlength' => true]) ?>
     <?= $form->field($product, 'p_amount')->textInput(['maxlength' => true]) ?>
@@ -32,6 +32,7 @@ $listData=ArrayHelper::map($categories,'id','title');
         $listData,
         ['prompt'=>'Select...']
     ); ?>
+    <?= $form->field($product,'images')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Create',['class' => 'btn btn-success']) ?>

@@ -28,7 +28,7 @@ $listData=ArrayHelper::map($categories,'id','title');
         $listData,
         ['prompt'=>'Select...']
     ); ?>
-
+    <?= $form->field($product,'images')->fileInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Update',['class' => 'btn btn-success']) ?>
