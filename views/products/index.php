@@ -40,7 +40,7 @@
                 'attribute' => 'images',
                 'format' => 'html',
                 'value' => function ($data) {
-                    return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100]);
+                    return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100,'height' => 100]);
                 },
             ],
             ['class' => 'yii\grid\ActionColumn'],

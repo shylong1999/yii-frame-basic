@@ -89,20 +89,23 @@ class ProductController extends Controller
 
     public function actionUpdate($id)
     {
-        $product = Product::findOne($id);
-        if ($product->load(Yii::$app->request->post())) {
-            $product->images = UploadedFile::getInstance($product, 'images');
-            $product->save();
-            if ($product->upload()) {
-                return $this->redirect('index');
-            }
+        if (Yii::$app->user->can('admin')) {
+            $product = Product::findOne($id);
+            if ($product->load(Yii::$app->request->post())) {
+                $product->images = UploadedFile::getInstance($product, 'images');
+                $product->save();
+                if ($product->upload()) {
+                    return $this->redirect('index');
+                }
 
+            }
+            $categories = Category::find()->asArray()->all();
+            return $this->render('/products/update', [
+                'product' => $product,
+                'categories' => $categories,
+            ]);
         }
-        $categories = Category::find()->asArray()->all();
-        return $this->render('/products/update', [
-            'product' => $product,
-            'categories' => $categories,
-        ]);
+        else return $this->redirect('product/index');
     }
 
     public function actionView($id)
