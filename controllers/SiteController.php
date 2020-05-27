@@ -174,6 +174,8 @@ class SiteController extends Controller
             $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
             if ($model->upload()) {
                 echo "post image success";
+                $basePath = '/uploads/'.$model->imageFile->baseName . ".".$model->imageFile->extension;
+                echo "<img src='$basePath'>";
                 return;
             }
         }
