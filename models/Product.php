@@ -37,6 +37,6 @@ class Product extends ActiveRecord
     }
 
     public function getCategories(){
-        return $this->hasOne(Category::className(),['c_id' => 'id']);
+        return $this->hasOne(Category::className(),['id' => 'c_id']);
     }
 }

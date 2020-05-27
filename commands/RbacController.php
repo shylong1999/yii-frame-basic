@@ -22,21 +22,21 @@ class RbacController extends Controller
         $updatePost->description = 'Update post';
         $auth->add($updatePost);
 
-        // add "author" role and give this role the "createPost" permission
-        $author = $auth->createRole('author');
-        $auth->add($author);
-        $auth->addChild($author, $createPost);
+        // add "user" role and give this role the "createPost" permission
+        $user = $auth->createRole('user');
+        $auth->add($user);
+        $auth->addChild($user, $createPost);
 
         // add "admin" role and give this role the "updatePost" permission
-        // as well as the permissions of the "author" role
+        // as well as the permissions of the "user" role
         $admin = $auth->createRole('admin');
         $auth->add($admin);
         $auth->addChild($admin, $updatePost);
-        $auth->addChild($admin, $author);
+        $auth->addChild($admin, $user);
 
         // Assign roles to users. 1 and 2 are IDs returned by IdentityInterface::getId()
         // usually implemented in your User model.
-        $auth->assign($author, 2);
+        $auth->assign($user, 2);
         $auth->assign($admin, 1);
     }
 }

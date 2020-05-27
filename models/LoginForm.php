@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\base\Model;
+use yii\db\ActiveRecord;
 
 /**
  * LoginForm is the model behind the login form.
@@ -11,7 +12,7 @@ use yii\base\Model;
  * @property User|null $user This property is read-only.
  *
  */
-class LoginForm extends Model
+class LoginForm extends ActiveRecord
 {
     public $username;
     public $password;
@@ -45,12 +46,30 @@ class LoginForm extends Model
     public function validatePassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
+
             $user = $this->getUser();
 
-            if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+            if (!$user) {
+
+                $this->addError($attribute, 'Incorrect username.');
+            } else {
+
+                if (!$user->validatePassword($this->password)) {
+
+                    $this->addError($attribute, 'Incorrect password.');
+
+                }
+
             }
+
         }
+//        if (!$this->hasErrors()) {
+//            $user = $this->getUser();
+//
+//            if (!$user || !$user->validatePassword($this->password)) {
+//                $this->addError($attribute, 'Incorrect username or password.');
+//            }
+//        }
     }
 
     /**
@@ -59,6 +78,8 @@ class LoginForm extends Model
      */
     public function login()
     {
+//        print_r($this->getUser());
+//        die();
         if ($this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         }
@@ -75,7 +96,6 @@ class LoginForm extends Model
         if ($this->_user === false) {
             $this->_user = User::findByUsername($this->username);
         }
-
         return $this->_user;
     }
 }

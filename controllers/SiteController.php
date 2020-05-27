@@ -5,9 +5,12 @@ namespace app\controllers;
 use app\models\Country;
 use app\models\EntryForm;
 use app\models\RegisterForm;
+use app\models\Role;
 use app\models\UploadForm;
+use app\models\User;
 use Yii;
 use yii\base\Model;
+use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\helpers\Url;
@@ -23,6 +26,7 @@ class SiteController extends Controller
     /**
      * {@inheritdoc}
      */
+
     public function behaviors()
     {
         return [
@@ -136,43 +140,48 @@ class SiteController extends Controller
         return $this->render('about');
     }
 
-    public function actionSay($message = "Hello World!"){
-        return $this->render('say',['message' => $message]);
+    public function actionSay($message = "Hello World!")
+    {
+        return $this->render('say', ['message' => $message]);
     }
 
 
-    public function actionEntry(){
+    public function actionEntry()
+    {
         $model = new EntryForm();
 
         $data = Country::find()->orderBy('name')->all();
         $country = Country::findOne('US');
 //        echo $country->name;
-        if ($model->load(Yii::$app->request->post())){
+        if ($model->load(Yii::$app->request->post())) {
 //            $data = $model->load(Yii::$app->request->post());
 //            echo $data->name;
 //            print_r($country->name);
 //            die();
 //            print_r(Url::to(['country/index']));
 //            die();
-            return $this->render('entry-confirm', ['model' => $model,'data'=>$data]);
+            return $this->render('entry-confirm', ['model' => $model, 'data' => $data]);
         } else {
             // either the page is initially displayed or there is some validation error
             return $this->render('entry', ['model' => $model]);
         }
     }
 
-    public function actionUpload(){
+    public function actionUpload()
+    {
         $model = new UploadForm();
-        if (Yii::$app->request->isPost){
-            $model->imageFile = UploadedFile::getInstance($model,'imageFile');
-            if ($model->upload()){
+        if (Yii::$app->request->isPost) {
+            $model->imageFile = UploadedFile::getInstance($model, 'imageFile');
+            if ($model->upload()) {
                 echo "post image success";
                 return;
             }
         }
-        return $this->render('upload',['model' => $model]);
+        return $this->render('upload', ['model' => $model]);
     }
-    public function actionCountry(){
+
+    public function actionCountry()
+    {
         $query = Country::find();
         $pagination = new Pagination([
             'defaultPageSize' => 5,
@@ -188,25 +197,56 @@ class SiteController extends Controller
             'pagination' => $pagination,
         ]);
     }
-    public function actionRegister(){
+
+    public function actionRegister()
+    {
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-//            $request = Yii::$app->request->post();
-//            print_r($request['name']);
-//            die();
-//            $model->save();
-//            Yii::$app->session->setFlash('registerFormSubmitted');
-//            return $this->refresh();
-//            return $this->goBack('/product/index');
-
             $auth = \Yii::$app->authManager;
-            $authorRole = $auth->getRole('author');
-            $auth->assign($authorRole, $model->id);
+            $userRole = $auth->getRole('user');
+            $auth->assign($userRole, $model->id);
             return $this->redirect('login');
         }
         return $this->render('register', [
             'model' => $model,
         ]);
+    }
+
+    public function actionManageUser()
+    {
+        if (Yii::$app->user->can('admin')) {
+            $users = User::find();
+            $dataProvider = new ActiveDataProvider([
+                'query' => $users,
+                'pagination' => [
+                    'pageSize' => 5,
+                ],
+            ]);
+
+            return $this->render('/users/index', [
+                'users' => $users,
+                'dataProvider' => $dataProvider,
+            ]);
+        } else return $this->redirect('manage-user');
+    }
+
+    public function actionUpdate($id)
+    {
+        if (Yii::$app->user->can('admin')) {
+            $user = User::findOne($id);
+            $user_role = Role::findOne(['user_id' => $id]);
+            $roles = Role::find()->all();
+
+            if ($user_role->load(Yii::$app->request->post()) && $user_role->save()) {
+                return $this->redirect('manage-user');
+            }
+
+            return $this->render('/users/update', [
+                'user' => $user,
+                'roles' => $roles,
+                'user_role' => $user_role,
+            ]);
+        } else return $this->redirect('index');
     }
 
 }

@@ -22,9 +22,24 @@ class ProductController extends Controller
 //                'only' => ['logout'],
                 'rules' => [
                     [
-                        'actions' => ['index','create','update','view'],
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['author'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['admin'],
                     ],
                 ],
             ],
@@ -34,10 +49,11 @@ class ProductController extends Controller
     public function actionIndex()
     {
         $query = new \yii\db\Query;
-        $products = $query->from(['p' => 'products'])
-            ->select(['p.id', 'p.p_name', 'p.p_price', 'p.p_amount', 'p.discount', 'c.title'])
-            ->innerJoin(['c' => 'categories'], 'c.id = p.c_id');
-
+//        $products = $query->from(['p' => 'products'])
+//            ->select(['p.id', 'p.p_name', 'p.p_price', 'p.p_amount', 'p.discount', 'c.title'])
+//            ->innerJoin(['c' => 'categories'], 'c.id = p.c_id');
+        $products = Product::find();
+        $products->joinWith('categories');
         $dataProvider = new ActiveDataProvider([
             'query' => $products,
             'pagination' => [

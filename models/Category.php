@@ -30,6 +30,6 @@ class Category extends ActiveRecord
     }
 
     public function getProducts(){
-        return $this->hasMany(Product::className(),['id' => 'c_id']);
+        return $this->hasMany(Product::className(),['c_id' => 'id']);
     }
 }

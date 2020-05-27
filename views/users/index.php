@@ -6,19 +6,14 @@ use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-/* @var $products app\models\Product  */
+/* @var $users app\models\User */
 
-$this->title = 'Products';
+$this->title = 'Manage Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="country-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Create Products', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 
@@ -27,15 +22,19 @@ $this->params['breadcrumbs'][] = $this->title;
 //        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'p_name',
+            'username',
+            'name',
             [
-                'attribute' => 'title',
-                'value'     => 'categories.title',
+                'attribute' => 'Role',
+                'value' => function ($data) {
+                    $roles = \Yii::$app->authManager->getRolesByUser($data->id);
+                    if ($roles) {
+                        return implode(', ', array_keys($roles));
+                    } else {
+                        return 'no roles';
+                    }
+                },
             ],
-
-            'p_price',
-            'p_amount',
-            'discount',
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

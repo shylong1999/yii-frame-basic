@@ -6,13 +6,16 @@ use yii\db\ActiveRecord;
 
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $name;
-    public $email;
-    public $authKey;
-    public $accessToken;
+//    public $id;
+//    public $username;
+//    public $password;
+//    public $name;
+//    public $email;
+//    public $age;
+//    public $authKey;
+//    public $accessToken;
+
+    public $role;
 
     public static function tableName()
     {
@@ -40,6 +43,15 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     /**
      * {@inheritdoc}
      */
+    public function rules()
+    {
+        return [
+            [['username', 'name', 'password','confirmPassword', 'email','age'], 'required'],
+            ['email', 'email'],
+            [['username','email'], 'unique'],
+            ['age', 'integer'],
+        ];
+    }
     public static function findIdentity($id)
     {
 //        $users = User::findOne($id);
@@ -72,16 +84,24 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
      */
     public static function findByUsername($username)
     {
-        $users = User::find()->asArray()->all();
-//        print_r($users);
-//        die();
-        foreach ($users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
 
-        return null;
+        $identity = User::findOne(['username' => $username]);
+        return new static($identity);
+//        return static::findOne(['username' => $username]);
+//        print_r($user);
+//        die();
+//        return $user;
+//        $users = User::find()->asArray()->all();
+////        print_r($users);
+////        die();
+//        foreach ($users as $user) {
+//            if (strcasecmp($user['username'], $username) === 0) {
+//                return new static($user);
+//            }
+//        }
+//
+//        return null;
+
     }
 
     /**
@@ -136,4 +156,5 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
         }
         return false;
     }
+//    public function
 }
