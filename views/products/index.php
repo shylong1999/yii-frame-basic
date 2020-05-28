@@ -22,9 +22,9 @@
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
 
-    <?= GridView::widget([
+    <?= Yii::$app->user->can('admin') ? (
+    GridView::widget([
         'dataProvider' => $dataProvider,
-//        'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'p_name',
@@ -40,12 +40,36 @@
                 'attribute' => 'images',
                 'format' => 'html',
                 'value' => function ($data) {
-                    return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100,'height' => 100]);
+                    return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100, 'height' => 100]);
                 },
             ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
-    ]); ?>
+    ])) : (GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+            'p_name',
+            [
+                'attribute' => 'title',
+                'value' => 'categories.title',
+            ],
+
+            'p_price',
+            'p_amount',
+            'discount',
+            [
+                'attribute' => 'images',
+                'format' => 'html',
+                'value' => function ($data) {
+                    return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100, 'height' => 100]);
+                },
+            ],
+
+
+        ],
+    ]))
+    ?>
 
 
 </div>

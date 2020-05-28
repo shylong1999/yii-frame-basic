@@ -45,6 +45,9 @@ AppAsset::register($this);
             Yii::$app->user->isGuest ? (
             ['label' => 'Register', 'url' => ['/site/register']]
             ) : (['label' => 'Category', 'url' => ['/category/index']]),
+            Yii::$app->user->can('admin') ? (
+            ['label' => 'Manager User', 'url' => ['/site/manage-user']]
+            ) : (''),
             Yii::$app->user->isGuest ? (''
             ) : (['label' => 'Products', 'url' => ['/product/index']]),
             Yii::$app->user->isGuest ? (
