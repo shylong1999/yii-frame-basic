@@ -9,6 +9,7 @@ use app\models\Product;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
@@ -18,6 +19,12 @@ class ProductController extends Controller
     public function behaviors()
     {
         return [
+            'verbs' => [
+                'class' => VerbFilter::className(),
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
             'access' => [
                 'class' => AccessControl::className(),
 //                'only' => ['logout'],
@@ -39,6 +46,11 @@ class ProductController extends Controller
                     ],
                     [
                         'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['admin'],
+                    ],
+                    [
+                        'actions' => ['delete'],
                         'allow' => true,
                         'roles' => ['admin'],
                     ],
@@ -115,5 +127,11 @@ class ProductController extends Controller
         return $this->render('/products/view', [
             'product' => $product,
         ]);
+    }
+    public function actionDelete($id)
+    {
+        $product = Product::findOne($id);
+        $product->delete();
+        return $this->redirect(['/product/index']);
     }
 }

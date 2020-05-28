@@ -19,7 +19,7 @@ class m200525_014205_create_products_table extends Migration
             'p_amount' => $this->integer(),
             'discount' => $this->integer(),
             'c_id' => $this->integer(10),
-            'images' => $this->string(),
+//            'images' => $this->string(),
 //            'created_at' => $this->timestamp(),
 //            'deleted_at' => $this->timestamp(),
         ]);

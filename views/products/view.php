@@ -34,7 +34,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'p_price',
         'p_amount',
         'discount',
-        'c_id'
+        [
+            'attribute' => 'images',
+            'format' => 'html',
+            'value' => function ($data) {
+                return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100,'height' => 100]);
+            },
+        ],
     ],
 ]) ?>
 

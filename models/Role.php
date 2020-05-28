@@ -21,7 +21,7 @@ class Role extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'item_name' => 'Item Name',
+            'item_name' => 'Role Name',
             'user_id' => 'User ID',
 
 //            'population' => 'Population',
