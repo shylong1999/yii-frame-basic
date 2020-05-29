@@ -16,7 +16,10 @@
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Products', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Yii::$app->user->can('admin') ? (
+
+        Html::a('Create Products', ['create'], ['class' => 'btn btn-success'])):
+            (Html::a('Order', ['order/create'], ['class' => 'btn btn-success']))?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -65,7 +68,6 @@
                     return Html::img(\Yii::$app->request->BaseUrl . '/uploads/' . $data->images, ['width' => 100, 'height' => 100]);
                 },
             ],
-
 
         ],
     ]))
