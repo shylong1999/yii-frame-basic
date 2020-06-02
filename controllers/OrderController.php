@@ -9,6 +9,7 @@ use app\models\Order;
 use app\models\OrderDetail;
 use app\models\Product;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\UploadedFile;
 
@@ -41,7 +42,8 @@ class OrderController extends Controller
 
                 $product->p_amount = $amount;
                 $product->save(false);
-                return $this->redirect('/product/index');
+//                return $this->redirect('/product/index');
+                return $this->redirect(['/order/view', 'id' => $order_detail->id]);
             }
         }
 
@@ -59,7 +61,7 @@ class OrderController extends Controller
         $order = new Order();
         $order->user_id = \Yii::$app->user->getId();
         $order->status = 0  ;
-        $order->date = date("Y-m-d H:i:s");;
+        $order->date = date("Y-m-d H:i:s");
         if ($order->validate()){
             $order->save();
             return $order;
@@ -71,8 +73,41 @@ class OrderController extends Controller
         $orderdetails->joinWith('orders');
         print_r($orderdetails->all());
         die();
-//        $orders = Order::find()->asArray()->where(['status' => 1])->joinWith('orderDetails')->all();
-//        print_r($orders);
+    }
+    public function actionView($id){
+        $query = new \yii\db\Query;
+        $orderDetail = $query->from(['od' => 'orderdetails'])
+            ->select([ 'od.quantity', 'o.payment','o.date','p.p_name'])
+            ->innerJoin(['o' => 'orders'], 'od.order_id = o.id')
+            ->innerJoin(['p'=> 'products'],'od.product_id = p.id')
+            ->where(['od.id' => $id]);
+        $dataProvider = new ActiveDataProvider([
+            'query' => $orderDetail,
+        ]);
+        return $this->render('/orders/view', [
+//            'category' => $category,
+            'orderDetail' => $orderDetail,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    public function actionOrders(){
+        $query = new \yii\db\Query;
+        $orderDetail = $query->from(['od' => 'orderdetails'])
+            ->select([ 'od.quantity', 'o.payment','o.date','p.p_name'])
+            ->innerJoin(['o' => 'orders'], 'od.order_id = o.id')
+            ->innerJoin(['p'=> 'products'],'od.product_id = p.id')
+            ->where(['o.user_id' => \Yii::$app->user->getId()])
+            ->orderBy('o.date');
+
+//        print_r($orderDetail->all());
 //        die();
+        $dataProvider = new ActiveDataProvider([
+            'query' => $orderDetail,
+        ]);
+        return $this->render('/users/orders', [
+//            'category' => $category,
+            'orderDetail' => $orderDetail,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

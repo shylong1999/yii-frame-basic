@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => Yii::$app->name,
+        'brandLabel' => "Shopping",
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
@@ -47,7 +47,7 @@ AppAsset::register($this);
             ) : (['label' => 'Category', 'url' => ['/category/index']]),
             Yii::$app->user->can('admin') ? (
             ['label' => 'Manager User', 'url' => ['/site/manage-user']]
-            ) : (''),
+            ) : (['label' => 'Orders', 'url' => ['/order/orders']]),
             Yii::$app->user->isGuest ? (''
             ) : (['label' => 'Products', 'url' => ['/product/index']]),
             Yii::$app->user->isGuest ? (
@@ -81,9 +81,9 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; My Shop <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+<!--        <p class="pull-right">--><?//= Yii::powered() ?><!--</p>-->
     </div>
 </footer>
 
