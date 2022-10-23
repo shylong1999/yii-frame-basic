@@ -55,6 +55,7 @@ class CategoryController extends Controller
     public function actionIndex(){
         $categories = Category::find();
 	print($categories);
+        print_r($categories);
         $dataProvider = new ActiveDataProvider([
             'query' => $categories,
         ]);
