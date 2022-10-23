@@ -45,6 +45,7 @@ class BookController extends Controller
     public function actionUpdate($id)
     {
         $book = Book::findOne($id);
+	print($book);
         if ($book->load(Yii::$app->request->post()) && $book->save()) {
             return $this->redirect(['view', 'id' => $book->id]);
         }
