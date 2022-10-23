@@ -106,6 +106,13 @@ class CategoryController extends Controller
         return $this->redirect(['/category/index']);
     }
 
+    public function actionDelete2($id)
+    {
+        $category = Category::findOne($id);
+        $category->delete();
+        return $this->redirect(['/category/index']);
+    }
+
     public function actionProduct(){
 //        $category = Category::findOne(['id' => 1]);
 //        $products = $category->getProducts();
