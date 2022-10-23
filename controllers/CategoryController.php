@@ -60,6 +60,9 @@ class CategoryController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => $categories,
         ]);
+	print("AAAS)");
+	//asdjasdkasdhas
+//asjkdhasdhjkasd
         return $this->render('/categories/index', ['dataProvider' => $dataProvider,'categories' => $categories]);
     }
     public function actionCreate(){
