@@ -106,7 +106,7 @@ class CategoryController extends Controller
         return $this->redirect(['/category/index']);
     }
 
-    public function actionDelete2($id)
+    public function actionDelete3($id)
     {
         $category = Category::findOne($id);
         $category->delete();
