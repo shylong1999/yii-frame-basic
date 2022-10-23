@@ -26,6 +26,8 @@ class BookController extends Controller
     {
         $books = Book::find();
 	print("ALO");
+	//sadjasjdas/
+//jasdashkdahsd
         $dataProvider = new ActiveDataProvider([
             'query' => $books,
         ]);
